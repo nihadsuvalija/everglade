@@ -1,33 +1,21 @@
 package com.everglade.main;
 
+import com.everglade.entity.Entity;
+import com.everglade.entity.Player;
+import com.everglade.util.Constants;
+
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.KeyEvent;
-import java.security.Key;
 
 public class Panel extends JPanel implements Runnable {
-    final int originalTileSize = 16;
-    final int scale = 3;
-
-    final int tileSize = originalTileSize * scale;
-    final int maxScreenCol = 16;
-    final int maxScreenRow = 12;
-    final int screenWidth = tileSize * maxScreenCol;
-    final int screenHeight = tileSize * maxScreenRow;
-
-
-    final int fps = 60;
 
     Thread gameThread;
     KeyHandler keyHandler = new KeyHandler();
 
-    // Players default position:
-    int x = 100;
-    int y = 100;
-    int speed = 4;
+    private Entity player = new Player(keyHandler);
 
     public Panel() {
-        this.setPreferredSize(new Dimension(screenWidth, screenHeight));
+        this.setPreferredSize(new Dimension(Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT));
         this.setBackground(Color.black);
         this.setDoubleBuffered(true);
         this.addKeyListener(keyHandler);
@@ -41,13 +29,14 @@ public class Panel extends JPanel implements Runnable {
 
     public void stopGameThread() {
         gameThread = null;
+        System.out.println("Game has been stopped.");
     }
 
     // This is the Game Loop function!
     @Override
     public void run() {
 
-        double drawInterval = 1000000000/fps;
+        double drawInterval = Constants.DRAW_INTERVAL;
         double delta = 0;
         long initialTime = System.nanoTime();
         long currentTime;
@@ -57,6 +46,7 @@ public class Panel extends JPanel implements Runnable {
 
         // This is the game loop!
         while (gameThread != null) {
+
             /*
             * In the game loop, we update information such as character position,
             * but we also draw the screen with the updated information
@@ -80,6 +70,7 @@ public class Panel extends JPanel implements Runnable {
 
             if (timer >= 1000000000) {
                 System.out.println("FPS: " + drawCount);
+                player.logPosition();
                 drawCount = 0;
                 timer = 0;
             }
@@ -88,23 +79,22 @@ public class Panel extends JPanel implements Runnable {
 
     // Function that will call every frame.
     public void update() {
-        if (keyHandler.upPressed) {
-            y -= speed;
-        } else if (keyHandler.downPressed) {
-            y += speed;
-        } else if (keyHandler.leftPressed) {
-            x -= speed;
-        } else if (keyHandler.rightPressed) {
-            x += speed;
+        player.update();
+
+        if (keyHandler.escPressed) {
+            stopGameThread();
         }
     }
 
+    // Function used for painting the graphics onto the panel.
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
 
         Graphics2D g2 = (Graphics2D) g;
         g2.setColor(Color.white);
-        g2.fillRect(x,y,tileSize,tileSize);
+
+        player.draw(g2);
+
         g2.dispose();
     }
 }
