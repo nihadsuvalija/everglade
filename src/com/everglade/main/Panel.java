@@ -20,6 +20,7 @@ public class Panel extends JPanel implements Runnable {
         this.setDoubleBuffered(true);
         this.addKeyListener(keyHandler);
         this.setFocusable(true);
+        this.requestFocusInWindow();
     }
 
     public void startGameThread() {
@@ -29,7 +30,6 @@ public class Panel extends JPanel implements Runnable {
 
     public void stopGameThread() {
         gameThread = null;
-        System.out.println("Game has been stopped.");
     }
 
     // This is the Game Loop function!
@@ -80,10 +80,6 @@ public class Panel extends JPanel implements Runnable {
     // Function that will call every frame.
     public void update() {
         player.update();
-
-        if (keyHandler.escPressed) {
-            stopGameThread();
-        }
     }
 
     // Function used for painting the graphics onto the panel.

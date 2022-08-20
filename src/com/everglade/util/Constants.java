@@ -22,7 +22,7 @@ public class Constants {
 
 
     // Positions:
-    public final static int INITIAL_POSITION_X = 0;
-    public final static int INITIAL_POSITION_Y = 0;
+    public final static int INITIAL_POSITION_X = 100;
+    public final static int INITIAL_POSITION_Y = 100;
     public final static int INITIAL_SPEED = 3;
 }

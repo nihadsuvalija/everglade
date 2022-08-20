@@ -15,6 +15,7 @@ public class KeyHandler implements KeyListener {
 
     @Override
     public void keyPressed(KeyEvent keyEvent) {
+        System.out.println("Key pressed");
         checkMovementKeysPressed(keyEvent);
         checkInteractionKeysPressed(keyEvent);
     }
